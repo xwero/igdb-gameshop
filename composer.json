@@ -4,9 +4,16 @@
     "type": "project",
     "require": {
         "php": ">=8.4",
-        "symfony/console": "^8.0"
+        "ext-json": "*",
+        "monolog/monolog": "^2.9",
+        "php-di/php-di": "^6.4",
+        "slim/psr7": "^1.6",
+        "slim/slim": "^4.12",
+        "symfony/console": "^8.0",
+        "symfony/uid": "^8.0"
     },
     "require-dev": {
+        "mockery/mockery": "^1.0",
         "pestphp/pest": "^4.4",
         "phpstan/phpstan": "^2.1"
     },
