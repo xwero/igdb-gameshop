@@ -1,0 +1,31 @@
+{
+    "name": "xwero/igdb-gameshop",
+    "description": "Igdb gameshop",
+    "type": "project",
+    "require": {
+        "php": ">=8.4",
+        "symfony/console": "^8.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^4.4",
+        "phpstan/phpstan": "^2.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Xwero\\IgdbGameshop\\": "src/",
+            "Xwero\\Pest\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "David"
+        }
+    ],
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
