@@ -35,4 +35,10 @@ pest()->extend(\Xwero\Pest\TestCase::class)->in('../src/*/Tests/*');
 |
 */
 
+function secretsFileExists(): bool {
+    return file_exists(__DIR__ .  '/secrets.json');
+}
 
+function getSecrets(): array {
+    return json_decode(file_get_contents(__DIR__ .  '/secrets.json'), true);
+}
