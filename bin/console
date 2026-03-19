@@ -4,10 +4,10 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use Xwero\IgdbGameshop\PIM\Commands\IGDBCommand;
+use Xwero\IgdbGameshop\PIM\Commands\IGDBGamesCommand;
 
 $application = new Application();
 
-$application->addCommand(new IGDBCommand());
+$application->addCommand(new IGDBGamesCommand());
 
 $application->run();

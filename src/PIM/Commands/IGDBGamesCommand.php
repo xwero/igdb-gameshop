@@ -13,7 +13,7 @@ use Xwero\IgdbGameshop\Shared\Data\IGDBOAuth;
 use Xwero\IgdbGameshop\PIM\Data\IGDBGames;
 use Xwero\IgdbGameshop\Shared\Data\TempFiles;
 
-class IGDBCommand extends Command
+class IGDBGamesCommand extends Command
 {
     protected function configure(): void
     {

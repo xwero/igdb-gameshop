@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Xwero\IgdbGameshop\PIM\Tests\Unit;
 
-use Xwero\IgdbGameshop\PIM\Commands\IGDBCommand;
+use Xwero\IgdbGameshop\PIM\Commands\IGDBGamesCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Input\ArrayInput;
 
 it('has correct command name', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     expect($command->getName())->toBe('igdb:import-games');
 });
 
 it('has correct description', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     expect($command->getDescription())->toBe('Imports games from IGDB API');
 });
 
 it('requires twitchId argument', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     $definition = $command->getDefinition();
     
     expect($definition->hasArgument('twitchId'))->toBeTrue();
@@ -27,7 +27,7 @@ it('requires twitchId argument', function() {
 });
 
 it('requires oauthSecret argument', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     $definition = $command->getDefinition();
     
     expect($definition->hasArgument('oauthSecret'))->toBeTrue();
@@ -35,7 +35,7 @@ it('requires oauthSecret argument', function() {
 });
 
 it('returns failure when access token cannot be obtained', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     $tester = new CommandTester($command);
     
     $result = $tester->execute([
@@ -48,13 +48,13 @@ it('returns failure when access token cannot be obtained', function() {
 });
 
 it('has configure and execute methods', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     
     expect(method_exists($command, 'configure'))->toBeTrue();
     expect(method_exists($command, 'execute'))->toBeTrue();
 });
 
 it('extends Symfony Command class', function() {
-    $command = new IGDBCommand();
+    $command = new IGDBGamesCommand();
     expect($command)->toBeInstanceOf(\Symfony\Component\Console\Command\Command::class);
 });
