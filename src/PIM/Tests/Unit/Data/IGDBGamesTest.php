@@ -14,8 +14,7 @@ it('constructs with access token', function() {
 
 it('requires non-empty access token', function() {
     $games = new IGDBGames('');
-    expect($games)->toBeInstanceOf(IGDBGames::class);
-});
+})->throws(\InvalidArgumentException::class);
 
 it('returns empty collection when no valid responses', function() {
     $games = new IGDBGames('invalid_token');

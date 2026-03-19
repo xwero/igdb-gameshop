@@ -7,24 +7,21 @@ namespace Xwero\IgdbGameshop\PIM\Data;
 use Xwero\IgdbGameshop\PIM\DTO\GamesDTO;
 use Xwero\IgdbGameshop\PIM\DTO\GamesDTOCollection;
 
-class IGDBGames
+class IGDBGames extends IGDBEndpoint
 {
-    private string $accessToken;
-    
-    public function __construct(string $accessToken)
-    {
-        $this->accessToken = $accessToken;
-    }
-
     public function fetchMultipleGames(string $twitchId, int $limit, int $startOffset, int $maxRequests): GamesDTOCollection
     {
+        if($this->ValidAccessTokenCheck($this->accessToken, $twitchId) == false){
+            return new GamesDTOCollection();
+        }
+
         $responses = [];
         $mh = curl_multi_init();
         $handles = [];
         
         for ($i = 0; $i < $maxRequests; $i++) {
             $offset = $startOffset + ($i * $limit);
-            $url = 'https://api.igdb.com/v4/games';
+            $url = $this->baseUrl . 'games';
             $body = 'fields *; limit ' . $limit . '; offset ' . $offset . ';';
             
             $ch = curl_init($url);

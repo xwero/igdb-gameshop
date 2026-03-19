@@ -7,8 +7,8 @@ namespace Xwero\IgdbGameshop\PIM\Commands;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Xwero\IgdbGameshop\PIM\DTO\GamesDTOCollection;
 use Xwero\IgdbGameshop\Shared\Data\IGDBOAuth;
 use Xwero\IgdbGameshop\PIM\Data\IGDBGames;
 use Xwero\IgdbGameshop\Shared\Data\TempFiles;
@@ -20,7 +20,8 @@ class IGDBGamesCommand extends Command
         $this->setName('igdb:import-games')
             ->setDescription('Imports games from IGDB API')
             ->addArgument('twitchId', InputArgument::REQUIRED, 'Twitch ID')
-            ->addArgument('oauthSecret', InputArgument::REQUIRED, 'Oauth secret');
+            ->addArgument('oauthSecret', InputArgument::REQUIRED, 'Oauth secret')
+            ->addOption('tempDir', null, InputOption::VALUE_REQUIRED, 'Temp directory');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -32,7 +33,7 @@ class IGDBGamesCommand extends Command
         $accessToken = $oauth->getAccessToken();
 
         if ($accessToken === null) {
-            $output->writeln('Failed to get access token. Stopping command.');
+            $output->writeln('Failed to get valid access token.');
             return Command::FAILURE;
         }
 
@@ -42,7 +43,8 @@ class IGDBGamesCommand extends Command
         $maxParallelRequests = 3;
         $attempts = 0;
         $maxAttempts = 3;
-        $tempFiles = new TempFiles();
+        $tempDir = $input->getOption('tempDir');
+        $tempFiles = is_string($tempDir) ? new TempFiles($tempDir) : new TempFiles();
         
         for ($offset = 0; $offset < $totalGames; $offset += $limit * $maxParallelRequests) {
             $success = false;
@@ -53,14 +55,14 @@ class IGDBGamesCommand extends Command
                 if ($data->isEmpty()) {
                     $attempts++;
                     if ($attempts >= $maxAttempts) {
-                        $output->writeln('Max attempts reached. Stopping command.');
+                        $output->writeln('Maximum retries reached. Check credentials or the API is down.');
                         return Command::FAILURE;
                     }
                     
                     // Get new access token and retry
                     $accessToken = $oauth->getAccessToken();
                     if ($accessToken === null) {
-                        $output->writeln('Failed to get new access token. Stopping command.');
+                        $output->writeln('Failed to get a new access token for retry.');
                         return Command::FAILURE;
                     }
                     $gamesEndpoint = new IGDBGames($accessToken);

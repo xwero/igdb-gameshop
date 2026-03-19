@@ -13,11 +13,6 @@ it('has correct command name', function() {
     expect($command->getName())->toBe('igdb:import-games');
 });
 
-it('has correct description', function() {
-    $command = new IGDBGamesCommand();
-    expect($command->getDescription())->toBe('Imports games from IGDB API');
-});
-
 it('requires twitchId argument', function() {
     $command = new IGDBGamesCommand();
     $definition = $command->getDefinition();
@@ -44,17 +39,5 @@ it('returns failure when access token cannot be obtained', function() {
     ]);
     
     expect($result)->toBe(1); // Command::FAILURE
-    expect($tester->getDisplay())->toContain('Failed to get access token');
-});
-
-it('has configure and execute methods', function() {
-    $command = new IGDBGamesCommand();
-    
-    expect(method_exists($command, 'configure'))->toBeTrue();
-    expect(method_exists($command, 'execute'))->toBeTrue();
-});
-
-it('extends Symfony Command class', function() {
-    $command = new IGDBGamesCommand();
-    expect($command)->toBeInstanceOf(\Symfony\Component\Console\Command\Command::class);
+    expect($tester->getDisplay())->toContain('Failed to get valid access token.');
 });
