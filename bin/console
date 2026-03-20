@@ -7,11 +7,15 @@ use Symfony\Component\Console\Application;
 use Xwero\IgdbGameshop\PIM\Commands\IGDBDataToDatabaseCommand;
 use Xwero\IgdbGameshop\PIM\Commands\IGDBGamesCommand;
 use Xwero\IgdbGameshop\PIM\Commands\IGDBCoversCommand;
+use Xwero\IgdbGameshop\PIM\Commands\IGDBGamesCommand2;
+use Xwero\IgdbGameshop\PIM\Commands\ImportTempFilesToGamesCommand;
 
 $application = new Application();
 
 $application->addCommand(new IGDBGamesCommand());
+$application->addCommand(new IGDBGamesCommand2());
 $application->addCommand(new IGDBCoversCommand());
 $application->addCommand(new IGDBDataToDatabaseCommand());
+$application->addCommand(new ImportTempFilesToGamesCommand());
 
 $application->run();
