@@ -4,6 +4,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
+use Xwero\IgdbGameshop\PIM\Commands\IGDBDataToDatabaseCommand;
 use Xwero\IgdbGameshop\PIM\Commands\IGDBGamesCommand;
 use Xwero\IgdbGameshop\PIM\Commands\IGDBCoversCommand;
 
@@ -11,5 +12,6 @@ $application = new Application();
 
 $application->addCommand(new IGDBGamesCommand());
 $application->addCommand(new IGDBCoversCommand());
+$application->addCommand(new IGDBDataToDatabaseCommand());
 
 $application->run();
