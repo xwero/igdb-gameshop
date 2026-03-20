@@ -6,6 +6,7 @@ namespace Xwero\IgdbGameshop\Shared\Tests\Unit;
 
 use Xwero\IgdbGameshop\PIM\DTO\GameCoversResponseDTO;
 use Xwero\IgdbGameshop\PIM\DTO\GameCoversResponseDTOCollection;
+use Xwero\IgdbGameshop\PIM\DTO\GamesAndCoversFileDTOCollection;
 use Xwero\IgdbGameshop\Shared\Data\TempFiles;
 use Xwero\IgdbGameshop\PIM\DTO\GamesDTO;
 use Xwero\IgdbGameshop\PIM\DTO\GamesDTOCollection;
@@ -138,4 +139,115 @@ it('handles covers with multiple entries', function() {
 
     // Cleanup
     unlink($this->customDir . '/covers_0.csv');
+});
+
+it('returns empty collection when only games files exist', function() {
+    $games = new GamesDTOCollection(
+        new GamesDTO(0, '{"id": 1, "name": "Game 1 content"}'),
+    );
+
+    $this->tempFiles->multiStoreGames($games);
+
+    $result = $this->tempFiles->getGamesAndCovers();
+
+    expect($result->isEmpty())->toBeTrue();
+
+    // Cleanup
+    unlink($this->customDir . '/games_0.json');
+});
+
+it('returns empty collection when only covers files exist', function() {
+    $covers1 = [
+        ['gameId' => 1, 'url' => 'http://example.com/cover1.jpg', 'width' => 100, 'height' => 200]
+    ];
+
+    $response1 = new GameCoversResponseDTO(0, $covers1);
+    $collection = new GameCoversResponseDTOCollection($response1);
+
+    $this->tempFiles->multiStoreCovers($collection);
+
+    $result = $this->tempFiles->getGamesAndCovers();
+
+    expect($result->isEmpty())->toBeTrue();
+
+    // Cleanup
+    unlink($this->customDir . '/covers_0.csv');
+});
+
+it('returns collection with matched games and covers', function() {
+    $games = new GamesDTOCollection(
+        new GamesDTO(0, '{"id": 1, "name": "Game 1"}'),
+        new GamesDTO(1, '{"id": 2, "name": "Game 2"}'),
+    );
+
+    $this->tempFiles->multiStoreGames($games);
+
+    $covers1 = [
+        ['gameId' => 1, 'url' => 'http://example.com/cover1.jpg', 'width' => 1920, 'height' => 1080],
+    ];
+
+    $covers2 = [
+        ['gameId' => 2, 'url' => 'http://example.com/cover2.jpg', 'width' => 1920, 'height' => 1080],
+    ];
+
+    $response1 = new GameCoversResponseDTO(0, $covers1);
+    $response2 = new GameCoversResponseDTO(1, $covers2);
+    $collection = new GameCoversResponseDTOCollection($response1, $response2);
+
+    $this->tempFiles->multiStoreCovers($collection);
+
+    $result = $this->tempFiles->getGamesAndCovers();
+
+    expect($result->isEmpty())->toBeFalse();
+
+    $rcollection = $result->toArray();
+
+    expect(count($rcollection))->toBe(2);
+
+    $dto1 = $rcollection[0];
+    $dto2 = $rcollection[1];
+
+    expect($dto1->games['name'])->toBe('Game 1');
+    expect($dto1->covers[0]['url'])->toBe('http://example.com/cover1.jpg');
+    expect($dto2->games['name'])->toBe('Game 2');
+
+    // Cleanup
+    unlink($this->customDir . '/games_0.json');
+    unlink($this->customDir . '/covers_0.csv');
+    unlink($this->customDir . '/games_1.json');
+    unlink($this->customDir . '/covers_1.csv');
+});
+
+it('ignores unmatched files', function() {
+    $games = new GamesDTOCollection(
+        new GamesDTO(0, '{"id": 1, "name": "Game 1"}'),
+        new GamesDTO(1, '{"id": 2, "name": "Game 2"}'),
+    );
+
+    $this->tempFiles->multiStoreGames($games);
+
+    $covers1 = [
+        ['gameId' => 1, 'url' => 'http://example.com/cover1.jpg', 'width' => 1920, 'height' => 1080],
+    ];
+
+    $covers2 = [
+        ['gameId' => 2, 'url' => 'http://example.com/cover2.jpg', 'width' => 1920, 'height' => 1080],
+    ];
+
+    $response1 = new GameCoversResponseDTO(0, $covers1);
+    $response2 = new GameCoversResponseDTO(2, $covers2);
+    $collection = new GameCoversResponseDTOCollection($response1, $response2);
+
+    $this->tempFiles->multiStoreCovers($collection);
+
+    $result = $this->tempFiles->getGamesAndCovers();
+
+    expect($result->isEmpty())->toBeFalse();
+    expect(count($result->toArray()))->toBe(1);
+
+    // Cleanup
+    unlink($this->customDir . '/games_0.json');
+    unlink($this->customDir . '/covers_0.csv');
+    unlink($this->customDir . '/games_1.json');
+    unlink($this->customDir . '/covers_2.csv');
 });

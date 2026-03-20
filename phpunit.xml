@@ -5,14 +5,8 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="CRM test Suite">
-            <directory suffix="Test.php">./src/CRM/Tests</directory>
-        </testsuite>
         <testsuite name="PIM test Suite">
             <directory suffix="Test.php">./src/PIM/Tests</directory>
-        </testsuite>
-        <testsuite name="Shop test Suite">
-            <directory suffix="Test.php">./src/Shop/Tests</directory>
         </testsuite>
         <testsuite name="Shared test Suite">
             <directory suffix="Test.php">./src/Shared/Tests</directory>

@@ -26,3 +26,7 @@ De details voor de API endpoints kan je vinden in [Shop.md](./Shop.md).
 Dit omvat de functionaliteit om de CRM oplossing aan te sturen.
 
 De details voor de functionaliteit staat in [CRM.md](./CRM.md)
+
+### Werken aan het project
+
+[post mortem](./post-mortem.md).

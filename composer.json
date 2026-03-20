@@ -6,6 +6,9 @@
         "php": ">=8.4",
         "ext-curl": "*",
         "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-pdo_sqlite": "*",
         "monolog/monolog": "^2.9",
         "php-di/php-di": "^6.4",
         "slim/psr7": "^1.6",
@@ -23,7 +26,10 @@
         "psr-4": {
             "Xwero\\IgdbGameshop\\": "src/",
             "Xwero\\Pest\\": "tests/"
-        }
+        },
+        "files": [
+            "src/PIM/Data/Migration/IGDBDataToDatabase.php"
+        ]
     },
     "authors": [
         {
